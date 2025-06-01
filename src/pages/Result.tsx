@@ -19,6 +19,7 @@ const Result = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showFlashcards, setShowFlashcards] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
+  const [hasAwardedXP, setHasAwardedXP] = useState(false);
 
   useEffect(() => {
     const style = localStorage.getItem('learningStyle');
@@ -32,11 +33,18 @@ const Result = () => {
     setLearningStyle(style);
     setTopic(currentTopic);
 
-    // Award XP and update user progress
-    const earnedXP = Math.floor(Math.random() * 50) + 25; // 25-75 XP
-    setXpEarned(earnedXP);
+    // Check if XP has already been awarded for this session
+    const sessionKey = `xp_awarded_${currentTopic}_${style}_${Date.now().toString().slice(0, -5)}`;
+    const alreadyAwarded = localStorage.getItem(sessionKey);
     
-    if (user) {
+    if (!alreadyAwarded && user && !hasAwardedXP) {
+      console.log('Awarding XP for new session');
+      
+      // Award XP and update user progress
+      const earnedXP = Math.floor(Math.random() * 50) + 25; // 25-75 XP
+      setXpEarned(earnedXP);
+      setHasAwardedXP(true);
+      
       const newXP = user.xp + earnedXP;
       const newLevel = Math.floor(newXP / 100) + 1;
       
@@ -45,6 +53,9 @@ const Result = () => {
         level: newLevel
       });
 
+      // Mark this session as awarded
+      localStorage.setItem(sessionKey, 'true');
+
       // Check for new badges
       if (newLevel > user.level) {
         toast({
@@ -52,16 +63,18 @@ const Result = () => {
           description: `Congratulations! You've reached level ${newLevel}!`
         });
       }
-    }
 
-    // Update learning streak and recent topics
-    const streak = parseInt(localStorage.getItem('learningStreak') || '0');
-    localStorage.setItem('learningStreak', (streak + 1).toString());
-    
-    const recentTopics = JSON.parse(localStorage.getItem('recentTopics') || '[]');
-    recentTopics.unshift(currentTopic);
-    localStorage.setItem('recentTopics', JSON.stringify(recentTopics.slice(0, 10)));
-  }, [navigate, user, updateUser]);
+      // Update learning streak and recent topics only once
+      const streak = parseInt(localStorage.getItem('learningStreak') || '0');
+      localStorage.setItem('learningStreak', (streak + 1).toString());
+      
+      const recentTopics = JSON.parse(localStorage.getItem('recentTopics') || '[]');
+      if (!recentTopics.includes(currentTopic)) {
+        recentTopics.unshift(currentTopic);
+        localStorage.setItem('recentTopics', JSON.stringify(recentTopics.slice(0, 10)));
+      }
+    }
+  }, [navigate, user, updateUser, hasAwardedXP]);
 
   const handleRestart = () => {
     navigate('/');
