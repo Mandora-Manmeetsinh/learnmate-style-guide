@@ -1,19 +1,24 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Brain, ArrowLeft, Volume2, VolumeX, RotateCcw, Share, Bookmark } from 'lucide-react';
+import { Brain, ArrowLeft, Volume2, VolumeX, RotateCcw, Share, Bookmark, Star, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from '@/hooks/useAuth';
 import VisualContent from '@/components/VisualContent';
 import AuditoryContent from '@/components/AuditoryContent';
 import KinestheticContent from '@/components/KinestheticContent';
+import { DoubtSolver } from '@/components/DoubtSolver';
+import { FlashcardViewer } from '@/components/FlashcardViewer';
 
 const Result = () => {
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
   const [learningStyle, setLearningStyle] = useState<string>('');
   const [topic, setTopic] = useState<string>('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showFlashcards, setShowFlashcards] = useState(false);
+  const [xpEarned, setXpEarned] = useState(0);
 
   useEffect(() => {
     const style = localStorage.getItem('learningStyle');
@@ -27,10 +32,36 @@ const Result = () => {
     setLearningStyle(style);
     setTopic(currentTopic);
 
-    // Update learning streak
+    // Award XP and update user progress
+    const earnedXP = Math.floor(Math.random() * 50) + 25; // 25-75 XP
+    setXpEarned(earnedXP);
+    
+    if (user) {
+      const newXP = user.xp + earnedXP;
+      const newLevel = Math.floor(newXP / 100) + 1;
+      
+      updateUser({
+        xp: newXP,
+        level: newLevel
+      });
+
+      // Check for new badges
+      if (newLevel > user.level) {
+        toast({
+          title: "Level Up!",
+          description: `Congratulations! You've reached level ${newLevel}!`
+        });
+      }
+    }
+
+    // Update learning streak and recent topics
     const streak = parseInt(localStorage.getItem('learningStreak') || '0');
     localStorage.setItem('learningStreak', (streak + 1).toString());
-  }, [navigate]);
+    
+    const recentTopics = JSON.parse(localStorage.getItem('recentTopics') || '[]');
+    recentTopics.unshift(currentTopic);
+    localStorage.setItem('recentTopics', JSON.stringify(recentTopics.slice(0, 10)));
+  }, [navigate, user, updateUser]);
 
   const handleRestart = () => {
     navigate('/');
@@ -97,6 +128,37 @@ const Result = () => {
     }
   };
 
+  if (showFlashcards) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-100">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Brain className="h-8 w-8 text-purple-600" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  LearnMate
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={() => setShowFlashcards(false)}
+                className="flex items-center space-x-2 hover:bg-purple-100"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Lesson</span>
+              </Button>
+            </div>
+          </div>
+        </nav>
+        
+        <div className="container mx-auto px-4 py-8">
+          <FlashcardViewer topic={topic} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Navigation Bar */}
@@ -116,6 +178,23 @@ const Result = () => {
                   <span className="text-sm text-green-600">Speaking...</span>
                 </div>
               )}
+              
+              {xpEarned > 0 && (
+                <div className="flex items-center space-x-2 bg-yellow-100 px-3 py-2 rounded-full">
+                  <Star className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm text-yellow-600">+{xpEarned} XP</span>
+                </div>
+              )}
+              
+              <Button
+                variant="ghost"
+                onClick={() => setShowFlashcards(true)}
+                className="flex items-center space-x-2 hover:bg-purple-100"
+              >
+                <Trophy className="h-4 w-4" />
+                <span className="hidden md:inline">Flashcards</span>
+              </Button>
+              
               <Button
                 variant="ghost"
                 onClick={handleBookmark}
@@ -124,6 +203,7 @@ const Result = () => {
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden md:inline">Save</span>
               </Button>
+              
               <Button
                 variant="ghost"
                 onClick={handleShare}
@@ -132,6 +212,7 @@ const Result = () => {
                 <Share className="h-4 w-4" />
                 <span className="hidden md:inline">Share</span>
               </Button>
+              
               <Button
                 variant="outline"
                 onClick={handleSwitchStyle}
@@ -140,6 +221,7 @@ const Result = () => {
                 <RotateCcw className="h-4 w-4" />
                 <span className="hidden md:inline">Switch Style</span>
               </Button>
+              
               <Button
                 variant="outline"
                 onClick={handleRestart}
@@ -172,6 +254,9 @@ const Result = () => {
 
         {/* Content */}
         {renderContent()}
+        
+        {/* Doubt Solver */}
+        <DoubtSolver topic={topic} />
       </div>
     </div>
   );

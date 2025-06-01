@@ -1,13 +1,16 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Brain, BookOpen, Headphones, Zap } from 'lucide-react';
+import { Brain, BookOpen, Headphones, Zap, User, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { AuthModal } from '@/components/AuthModal';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   const [learningStreak, setLearningStreak] = useState(0);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const streak = localStorage.getItem('learningStreak') || '0';
@@ -15,7 +18,11 @@ const Index = () => {
   }, []);
 
   const startLearning = () => {
-    navigate('/learning-style');
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/learning-style');
+    }
   };
 
   return (
@@ -30,14 +37,43 @@ const Index = () => {
                 LearnMate
               </span>
             </div>
-            {learningStreak > 0 && (
-              <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-pink-100 px-4 py-2 rounded-full">
-                <Zap className="h-4 w-4 text-orange-500" />
-                <span className="text-sm font-medium text-gray-700">
-                  {learningStreak} sessions completed
-                </span>
-              </div>
-            )}
+            
+            <div className="flex items-center space-x-4">
+              {isAuthenticated && user ? (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium">{user.name}</span>
+                  </div>
+                  <Button onClick={() => navigate('/dashboard')} variant="outline">
+                    Dashboard
+                  </Button>
+                  <Button onClick={logout} variant="ghost">
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  onClick={() => setShowAuthModal(true)}
+                  variant="outline"
+                  className="flex items-center space-x-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+              )}
+              
+              {learningStreak > 0 && (
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-pink-100 px-4 py-2 rounded-full">
+                  <Zap className="h-4 w-4 text-orange-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {learningStreak} sessions completed
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -112,10 +148,12 @@ const Index = () => {
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-xl rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
           >
-            Start Learning
+            {isAuthenticated ? 'Go to Dashboard' : 'Start Learning'}
           </Button>
         </div>
       </div>
+
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 };
