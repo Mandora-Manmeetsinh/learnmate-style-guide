@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, RotateCcw, Trophy, Zap } from 'lucide-react';
+import { CheckCircle, XCircle, RotateCcw, Trophy, Zap, Target, Sparkles } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 interface KinestheticContentProps {
@@ -149,34 +148,34 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
   const progress = ((currentQuestion + (showExplanation ? 1 : 0)) / questions.length) * 100;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       {/* Quiz Header */}
-      <Card className="border-0 bg-gradient-to-r from-green-100 to-emerald-100 shadow-lg">
+      <Card className="glass-card border-white/10 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center">
-                <Zap className="h-5 w-5 text-white" />
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-glow">
+                <Zap className="h-6 w-6 text-white" />
               </div>
-              <CardTitle className="text-2xl text-gray-800">Interactive Quiz</CardTitle>
+              <CardTitle className="text-3xl font-display gradient-text">Interactive Quiz</CardTitle>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="bg-white/80 text-gray-700">
+              <Badge variant="secondary" className="glass-effect border-white/20 text-base px-4 py-2">
                 Question {currentQuestion + 1} of {questions.length}
               </Badge>
-              <Badge variant="secondary" className="bg-white/80 text-gray-700">
+              <Badge variant="secondary" className="glass-effect border-white/20 text-base px-4 py-2">
                 Score: {score}/{questions.length}
               </Badge>
             </div>
           </div>
-          <CardDescription className="text-gray-700">
+          <CardDescription className="text-foreground/70 text-lg mt-4">
             Test your understanding through interactive questions
           </CardDescription>
           
           {/* Progress Bar */}
-          <div className="w-full bg-white/60 rounded-full h-3 mt-4">
+          <div className="w-full glass-effect rounded-full h-4 mt-6 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-green-400 to-emerald-400 h-3 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-emerald-400 to-teal-400 h-4 rounded-full transition-all duration-500 shadow-glow"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -184,26 +183,26 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
       </Card>
 
       {/* Current Question */}
-      <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+      <Card className="glass-card border-white/10 hover:border-white/20 transition-all duration-300">
         <CardHeader>
-          <CardTitle className="text-xl text-gray-800">
+          <CardTitle className="text-2xl font-display text-foreground/90 leading-relaxed">
             {questions[currentQuestion].question}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {questions[currentQuestion].options.map((option, index) => {
-              let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ";
+              let buttonClass = "w-full text-left p-6 rounded-2xl border-2 transition-all duration-300 text-lg ";
               
               if (!showExplanation) {
-                buttonClass += "border-gray-200 hover:border-green-300 hover:bg-green-50";
+                buttonClass += "glass-effect border-white/20 hover:border-emerald-400/50 hover:bg-white/10 hover:shadow-glow";
               } else {
                 if (index === questions[currentQuestion].correctAnswer) {
-                  buttonClass += "border-green-400 bg-green-50 text-green-800";
+                  buttonClass += "border-emerald-400 bg-emerald-500/20 text-emerald-300 shadow-glow";
                 } else if (index === selectedAnswer && selectedAnswer !== questions[currentQuestion].correctAnswer) {
-                  buttonClass += "border-red-400 bg-red-50 text-red-800";
+                  buttonClass += "border-red-400 bg-red-500/20 text-red-300";
                 } else {
-                  buttonClass += "border-gray-200 bg-gray-50 text-gray-600";
+                  buttonClass += "border-white/10 bg-white/5 text-foreground/60";
                 }
               }
 
@@ -216,13 +215,13 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
                   variant="outline"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-left">{option}</span>
+                    <span className="text-left font-medium">{option}</span>
                     {showExplanation && (
-                      <div className="ml-2">
+                      <div className="ml-4">
                         {index === questions[currentQuestion].correctAnswer ? (
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <CheckCircle className="h-6 w-6 text-emerald-400" />
                         ) : index === selectedAnswer ? (
-                          <XCircle className="h-5 w-5 text-red-600" />
+                          <XCircle className="h-6 w-6 text-red-400" />
                         ) : null}
                       </div>
                     )}
@@ -236,15 +235,15 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
 
       {/* Explanation */}
       {showExplanation && (
-        <Card className="border-0 bg-blue-50 shadow-lg animate-fade-in">
+        <Card className="glass-card border-blue-500/30 bg-blue-500/10 animate-slide-up">
           <CardHeader>
-            <CardTitle className="text-lg text-gray-800 flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-blue-600" />
-              <span>Explanation</span>
+            <CardTitle className="text-xl font-display flex items-center space-x-3">
+              <Target className="h-6 w-6 text-blue-400" />
+              <span className="text-blue-300">Explanation</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-foreground/80 leading-relaxed text-lg">
               {questions[currentQuestion].explanation}
             </p>
           </CardContent>
@@ -253,28 +252,29 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
 
       {/* Navigation */}
       {showExplanation && (
-        <div className="flex justify-center space-x-4">
+        <div className="flex justify-center space-x-6">
           {!isQuizComplete ? (
             <Button
               onClick={nextQuestion}
-              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-3 rounded-xl"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300"
             >
               Next Question
+              <Target className="ml-2 h-5 w-5" />
             </Button>
           ) : (
-            <div className="text-center space-y-4">
-              <Card className="border-0 bg-gradient-to-r from-purple-100 to-blue-100 shadow-lg">
+            <div className="text-center space-y-6 w-full max-w-2xl">
+              <Card className="glass-card border-white/10 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10">
                 <CardHeader>
-                  <div className="flex items-center justify-center space-x-2">
-                    <Trophy className="h-8 w-8 text-yellow-500" />
-                    <CardTitle className="text-2xl text-gray-800">Quiz Complete!</CardTitle>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Trophy className="h-10 w-10 text-yellow-400" />
+                    <CardTitle className="text-3xl font-display gradient-text">Quiz Complete!</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-xl text-gray-700 mb-4">
+                <CardContent className="text-center space-y-6">
+                  <p className="text-2xl text-foreground/90 font-semibold mb-4">
                     Your Score: {score}/{questions.length} ({Math.round((score/questions.length) * 100)}%)
                   </p>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-foreground/70 text-lg mb-8">
                     {score === questions.length 
                       ? "Perfect! You've mastered this topic!" 
                       : score >= questions.length * 0.7 
@@ -284,9 +284,9 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
                   </p>
                   <Button
                     onClick={resetQuiz}
-                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-3 rounded-xl"
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300"
                   >
-                    <RotateCcw className="h-4 w-4 mr-2" />
+                    <RotateCcw className="h-5 w-5 mr-2" />
                     Try Again
                   </Button>
                 </CardContent>
@@ -297,26 +297,29 @@ const KinestheticContent = ({ topic }: KinestheticContentProps) => {
       )}
 
       {/* Learning Tips */}
-      <Card className="border-0 bg-gradient-to-r from-yellow-100 to-orange-100 shadow-lg">
+      <Card className="glass-card border-white/10 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10">
         <CardHeader>
-          <CardTitle className="text-xl text-gray-800">Kinesthetic Learning Tips</CardTitle>
+          <div className="flex items-center space-x-3">
+            <Sparkles className="h-6 w-6 text-amber-400" />
+            <CardTitle className="text-xl font-display text-amber-300">Kinesthetic Learning Tips</CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-gray-700">
-            <li className="flex items-center space-x-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+          <ul className="space-y-3 text-foreground/80">
+            <li className="flex items-center space-x-3">
+              <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
               <span>Take your time to think through each question</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+            <li className="flex items-center space-x-3">
+              <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
               <span>Read explanations carefully to understand the reasoning</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+            <li className="flex items-center space-x-3">
+              <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
               <span>Retake the quiz to reinforce your learning</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+            <li className="flex items-center space-x-3">
+              <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
               <span>Try to apply these concepts to real-world situations</span>
             </li>
           </ul>

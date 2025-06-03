@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Brain, ArrowLeft, Volume2, VolumeX, RotateCcw, Share, Bookmark, Star, Trophy } from 'lucide-react';
+import { Brain, ArrowLeft, Volume2, VolumeX, RotateCcw, Share, Bookmark, Star, Trophy, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from '@/hooks/useAuth';
@@ -143,20 +143,22 @@ const Result = () => {
 
   if (showFlashcards) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-100">
-          <div className="container mx-auto px-4 py-4">
+      <div className="min-h-screen bg-background">
+        <nav className="sticky top-0 z-50 glass-effect border-b border-white/5">
+          <div className="container mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Brain className="h-8 w-8 text-purple-600" />
-                <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-glow">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-display font-bold gradient-text">
                   LearnMate
                 </span>
               </div>
               <Button
                 variant="ghost"
                 onClick={() => setShowFlashcards(false)}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 hover:bg-white/5"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Back to Lesson</span>
@@ -165,7 +167,7 @@ const Result = () => {
           </div>
         </nav>
         
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-6 py-8">
           <FlashcardViewer topic={topic} />
         </div>
       </div>
@@ -173,36 +175,38 @@ const Result = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-background">
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-100">
-        <div className="container mx-auto px-4 py-4">
+      <nav className="sticky top-0 z-50 glass-effect border-b border-white/5">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Brain className="h-8 w-8 text-purple-600" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-glow">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-2xl font-display font-bold gradient-text">
                 LearnMate
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               {isSpeaking && (
-                <div className="flex items-center space-x-2 bg-green-100 px-3 py-2 rounded-full">
-                  <Volume2 className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600">Speaking...</span>
+                <div className="flex items-center space-x-2 glass-card px-4 py-2 rounded-full">
+                  <Volume2 className="h-4 w-4 text-green-400" />
+                  <span className="text-sm text-green-400 font-medium">Speaking...</span>
                 </div>
               )}
               
               {xpEarned > 0 && (
-                <div className="flex items-center space-x-2 bg-yellow-100 px-3 py-2 rounded-full">
-                  <Star className="h-4 w-4 text-yellow-600" />
-                  <span className="text-sm text-yellow-600">+{xpEarned} XP</span>
+                <div className="flex items-center space-x-2 glass-card px-4 py-2 rounded-full animate-glow-pulse">
+                  <Star className="h-4 w-4 text-yellow-400" />
+                  <span className="text-sm text-yellow-400 font-medium">+{xpEarned} XP</span>
                 </div>
               )}
               
               <Button
                 variant="ghost"
                 onClick={() => setShowFlashcards(true)}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 hover:bg-white/5 glass-effect"
               >
                 <Trophy className="h-4 w-4" />
                 <span className="hidden md:inline">Flashcards</span>
@@ -211,7 +215,7 @@ const Result = () => {
               <Button
                 variant="ghost"
                 onClick={handleBookmark}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 hover:bg-white/5"
               >
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden md:inline">Save</span>
@@ -220,7 +224,7 @@ const Result = () => {
               <Button
                 variant="ghost"
                 onClick={handleShare}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 hover:bg-white/5"
               >
                 <Share className="h-4 w-4" />
                 <span className="hidden md:inline">Share</span>
@@ -229,7 +233,7 @@ const Result = () => {
               <Button
                 variant="outline"
                 onClick={handleSwitchStyle}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 glass-effect border-white/20 hover:bg-white/10"
               >
                 <RotateCcw className="h-4 w-4" />
                 <span className="hidden md:inline">Switch Style</span>
@@ -238,7 +242,7 @@ const Result = () => {
               <Button
                 variant="outline"
                 onClick={handleRestart}
-                className="flex items-center space-x-2 hover:bg-purple-100"
+                className="flex items-center space-x-2 glass-effect border-white/20 hover:bg-white/10"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden md:inline">Restart</span>
@@ -248,28 +252,34 @@ const Result = () => {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-6 py-8">
         {/* Header */}
-        <div className="text-center max-w-4xl mx-auto mb-8">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <span className="text-3xl">{getStyleIcon()}</span>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <div className="text-center max-w-4xl mx-auto mb-12">
+          <div className="flex items-center justify-center space-x-4 mb-6">
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-3xl flex items-center justify-center shadow-glow">
+              <span className="text-2xl">{getStyleIcon()}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text">
               {getStyleName()}
             </h1>
           </div>
-          <h2 className="text-xl md:text-2xl text-gray-700 font-semibold mb-2">
+          <h2 className="text-2xl md:text-3xl text-foreground/90 font-semibold mb-3">
             {topic}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-foreground/60 text-lg">
             Content personalized for your learning style
           </p>
         </div>
 
         {/* Content */}
-        {renderContent()}
+        <div className="space-y-8">
+          {renderContent()}
+        </div>
         
         {/* Doubt Solver */}
-        <DoubtSolver topic={topic} />
+        <div className="mt-12">
+          <DoubtSolver topic={topic} />
+        </div>
       </div>
     </div>
   );

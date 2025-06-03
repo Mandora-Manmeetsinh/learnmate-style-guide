@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Lightbulb, Target, CheckCircle } from 'lucide-react';
+import { BookOpen, Lightbulb, Target, CheckCircle, Sparkles } from 'lucide-react';
 
 interface VisualContentProps {
   topic: string;
@@ -53,40 +52,40 @@ const VisualContent = ({ topic }: VisualContentProps) => {
   const content = getVisualContent(topic);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       {/* Overview Section */}
-      <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+      <Card className="glass-card border-white/10 hover:border-white/20 transition-all duration-300">
         <CardHeader>
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center shadow-glow">
+              <BookOpen className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl text-gray-800">Overview</CardTitle>
+            <CardTitle className="text-3xl font-display gradient-text">Overview</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-lg text-gray-700 leading-relaxed">{content.overview}</p>
+          <p className="text-lg text-foreground/80 leading-relaxed">{content.overview}</p>
         </CardContent>
       </Card>
 
       {/* Key Points Section */}
-      <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+      <Card className="glass-card border-white/10 hover:border-white/20 transition-all duration-300">
         <CardHeader>
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full flex items-center justify-center">
-              <Target className="h-5 w-5 text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-glow">
+              <Target className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl text-gray-800">Key Points</CardTitle>
+            <CardTitle className="text-3xl font-display gradient-text">Key Points</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             {content.keyPoints.map((point, index) => (
-              <div key={index} className="flex items-start space-x-3 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
-                <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <div key={index} className="flex items-start space-x-4 p-6 glass-effect rounded-2xl hover:bg-white/5 transition-all duration-300 group">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-glow group-hover:shadow-glow-lg transition-all duration-300">
                   <span className="text-white text-sm font-bold">{index + 1}</span>
                 </div>
-                <p className="text-gray-700 font-medium">{point}</p>
+                <p className="text-foreground/80 font-medium text-lg leading-relaxed">{point}</p>
               </div>
             ))}
           </div>
@@ -94,27 +93,29 @@ const VisualContent = ({ topic }: VisualContentProps) => {
       </Card>
 
       {/* Visual Elements Section */}
-      <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+      <Card className="glass-card border-white/10 hover:border-white/20 transition-all duration-300">
         <CardHeader>
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center">
-              <Lightbulb className="h-5 w-5 text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-glow">
+              <Lightbulb className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl text-gray-800">Visual Learning Aids</CardTitle>
+            <CardTitle className="text-3xl font-display gradient-text">Visual Learning Aids</CardTitle>
           </div>
-          <CardDescription>Imagine these visual representations to enhance understanding</CardDescription>
+          <CardDescription className="text-foreground/60 text-lg mt-2">
+            Imagine these visual representations to enhance understanding
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             {content.visualElements.map((element, index) => (
-              <div key={index} className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-dashed border-blue-200">
-                <div className="flex items-center space-x-2 mb-2">
-                  <CheckCircle className="h-5 w-5 text-blue-500" />
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+              <div key={index} className="p-6 glass-effect rounded-2xl border-2 border-dashed border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 group">
+                <div className="flex items-center space-x-3 mb-3">
+                  <CheckCircle className="h-6 w-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                  <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                     Visual Aid {index + 1}
                   </Badge>
                 </div>
-                <p className="text-gray-700">{element}</p>
+                <p className="text-foreground/80 leading-relaxed">{element}</p>
               </div>
             ))}
           </div>
@@ -122,12 +123,15 @@ const VisualContent = ({ topic }: VisualContentProps) => {
       </Card>
 
       {/* Summary Section */}
-      <Card className="border-0 bg-gradient-to-r from-purple-100 to-blue-100 shadow-lg">
+      <Card className="glass-card border-white/10 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10">
         <CardHeader>
-          <CardTitle className="text-2xl text-gray-800 text-center">Summary</CardTitle>
+          <div className="flex items-center justify-center space-x-3">
+            <Sparkles className="h-8 w-8 text-purple-400" />
+            <CardTitle className="text-3xl font-display text-center gradient-text">Summary</CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
-          <p className="text-lg text-gray-700 leading-relaxed text-center font-medium">
+          <p className="text-lg text-foreground/80 leading-relaxed text-center font-medium">
             {content.summary}
           </p>
         </CardContent>
